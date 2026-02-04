@@ -21,11 +21,13 @@ User invokes: `/pm <text>`
 
 ## Output Format
 
-Return ONLY the corrected text in a code block:
+**Plain text (no code blocks in input):** Return corrected text in a code block:
 
 ```
 [corrected text here]
 ```
+
+**Contains code blocks:** Return corrected text as markdown (not wrapped in code block) to preserve formatting.
 
 No explanations. No "here's your corrected text". Just the clean result ready to copy-paste.
 
@@ -59,3 +61,21 @@ Output:
 ```
 The deploy succeeded, but we have a database connection issue in staging.
 ```
+
+Input: `/pm i found the bug, the issue is in this code:
+\`\`\`python
+def calculate(x)
+    return x * 2
+\`\`\`
+its missing colon after function definition`
+
+Output:
+
+I found the bug. The issue is in this code:
+
+```python
+def calculate(x)
+    return x * 2
+```
+
+It's missing a colon after the function definition.
