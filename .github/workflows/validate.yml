@@ -1,0 +1,81 @@
+name: Validate Skills
+
+on:
+  push:
+    paths:
+      - 'skills/**'
+  pull_request:
+    paths:
+      - 'skills/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate skill structure
+        run: |
+          errors=0
+
+          for skill_dir in skills/*/; do
+            if [ -d "$skill_dir" ]; then
+              skill_name=$(basename "$skill_dir")
+
+              # Skip hidden directories
+              if [[ "$skill_name" =~ ^\. ]]; then
+                continue
+              fi
+
+              echo "🔍 Validating: $skill_name"
+
+              # Check SKILL.md exists
+              if [ ! -f "$skill_dir/SKILL.md" ]; then
+                echo "  ❌ Missing SKILL.md"
+                errors=$((errors + 1))
+                continue
+              fi
+
+              # Check frontmatter exists
+              if ! head -1 "$skill_dir/SKILL.md" | grep -q "^---$"; then
+                echo "  ❌ SKILL.md must start with YAML frontmatter (---)"
+                errors=$((errors + 1))
+                continue
+              fi
+
+              # Check frontmatter is closed
+              if ! sed -n '2,/^---$/p' "$skill_dir/SKILL.md" | tail -1 | grep -q "^---$"; then
+                echo "  ❌ SKILL.md frontmatter not properly closed"
+                errors=$((errors + 1))
+                continue
+              fi
+
+              # Check required fields in frontmatter
+              frontmatter=$(sed -n '1,/^---$/p' "$skill_dir/SKILL.md" | tail -n +2 | head -n -1)
+
+              if ! echo "$frontmatter" | grep -q "^name:"; then
+                echo "  ❌ Missing 'name' field in frontmatter"
+                errors=$((errors + 1))
+              fi
+
+              if ! echo "$frontmatter" | grep -q "^description:"; then
+                echo "  ❌ Missing 'description' field in frontmatter"
+                errors=$((errors + 1))
+              fi
+
+              if [ $errors -eq 0 ]; then
+                echo "  ✅ Valid"
+              fi
+            fi
+          done
+
+          if [ $errors -gt 0 ]; then
+            echo ""
+            echo "❌ Validation failed with $errors error(s)"
+            exit 1
+          fi
+
+          echo ""
+          echo "✅ All skills validated successfully"

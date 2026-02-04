@@ -1,0 +1,55 @@
+name: Build and Release Skills
+
+on:
+  release:
+    types: [created]
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build skill packages
+        run: |
+          mkdir -p dist
+          for skill_dir in skills/*/; do
+            if [ -d "$skill_dir" ]; then
+              skill_name=$(basename "$skill_dir")
+              # Skip hidden directories
+              if [[ ! "$skill_name" =~ ^\. ]]; then
+                # Validate SKILL.md exists and has frontmatter
+                if [ -f "$skill_dir/SKILL.md" ]; then
+                  if head -1 "$skill_dir/SKILL.md" | grep -q "^---$"; then
+                    echo "📦 Packaging: $skill_name"
+                    (cd skills && zip -r "../dist/${skill_name}.zip" "$skill_name" -x "*.DS_Store" -x "*__pycache__*")
+                  else
+                    echo "⚠️ Skipping $skill_name: SKILL.md missing frontmatter"
+                  fi
+                else
+                  echo "⚠️ Skipping $skill_name: No SKILL.md found"
+                fi
+              fi
+            fi
+          done
+
+      - name: List built packages
+        run: ls -la dist/
+
+      - name: Upload release assets
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload artifacts (for manual runs)
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: skill-packages
+          path: dist/*.zip
