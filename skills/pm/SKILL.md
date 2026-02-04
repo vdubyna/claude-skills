@@ -29,7 +29,19 @@ User invokes: `/pm <text>`
 
 **Contains code blocks:** Return corrected text as markdown (not wrapped in code block) to preserve formatting.
 
-No explanations. No "here's your corrected text". Just the clean result ready to copy-paste.
+**Hints section:** After the corrected text, add a brief "Hints" section with 1-2 tips. Focus on:
+- Patterns that help sound more natural (not just typos)
+- Common non-native speaker mistakes worth learning
+- Simple explanations in easy English
+
+Skip obvious typos. Pick the most useful learning points.
+
+Format:
+```
+💡 **Hints:**
+- [tip 1]
+- [tip 2]
+```
 
 ## Style Guidelines
 
@@ -48,6 +60,10 @@ Output:
 We need to discuss the API endpoint - it's not working properly in production.
 ```
 
+💡 **Hints:**
+- "proper" → "properly" (use adverb form with verbs: "works properly", "runs quickly")
+- "on production" → "in production" (we say "in production/staging/development")
+
 Input: `/pm can you please review my PR when you have time, i added new feature for cart calculation and also fix some bugs`
 
 Output:
@@ -55,12 +71,20 @@ Output:
 Please review my PR when you have time. I added a cart calculation feature and fixed some bugs.
 ```
 
+💡 **Hints:**
+- "added... and also fix" → "added... and fixed" (keep same tense: both past)
+- "new feature for X" → "X feature" is shorter and more natural in tech context
+
 Input: `/pm the deploy was success but we have issue with database connection on staging enviroment`
 
 Output:
 ```
 The deploy succeeded, but we have a database connection issue in staging.
 ```
+
+💡 **Hints:**
+- "was success" → "succeeded" (use verb form, not "was + noun")
+- "have issue" → "have an issue" or "have issues" (countable noun needs article)
 
 Input: `/pm i found the bug, the issue is in this code:
 \`\`\`python
@@ -79,3 +103,6 @@ def calculate(x)
 ```
 
 It's missing a colon after the function definition.
+
+💡 **Hints:**
+- "its" → "it's" (it's = it is, its = belonging to it)
