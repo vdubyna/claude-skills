@@ -1,4 +1,4 @@
-name: Validate and Build Skills
+name: Validate Skills
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
       - 'skills/**'
 
 jobs:
-  validate-and-build:
+  validate:
     runs-on: ubuntu-latest
 
     steps:
@@ -79,26 +79,3 @@ jobs:
           echo ""
           echo "✅ All skills validated successfully"
 
-      - name: Build skill packages
-        run: |
-          mkdir -p dist
-          for skill_dir in skills/*/; do
-            if [ -d "$skill_dir" ]; then
-              skill_name=$(basename "$skill_dir")
-              if [[ ! "$skill_name" =~ ^\. ]]; then
-                if [ -f "$skill_dir/SKILL.md" ]; then
-                  echo "📦 Packaging: $skill_name"
-                  (cd skills && zip -r "../dist/${skill_name}.zip" "$skill_name" -x "*.DS_Store" -x "*__pycache__*")
-                fi
-              fi
-            fi
-          done
-
-      - name: List built packages
-        run: ls -la dist/
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: skill-packages
-          path: dist/*.zip
