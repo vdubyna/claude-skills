@@ -1,0 +1,20 @@
+{
+  "name": "vdubyna-skills",
+  "version": "1.0.0",
+  "description": "Personal collection of productivity skills for Claude",
+  "owner": "vdubyna",
+  "plugins": [
+    {
+      "name": "pm",
+      "description": "Proofread and polish messages for professional communication. Fixes grammar, spelling, and rephrases for clarity.",
+      "source": {
+        "type": "github",
+        "repo": "vdubyna/claude-skills",
+        "ref": "main",
+        "path": "skills/pm"
+      },
+      "category": "productivity",
+      "tags": ["writing", "proofreading", "communication"]
+    }
+  ]
+}
