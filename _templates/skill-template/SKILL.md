@@ -1,3 +1,8 @@
+---
+name: skill-name
+description: Brief one-line description of what this skill does. Include trigger words and use cases.
+---
+
 # [Skill Name]
 
 > Brief one-line description of what this skill does.

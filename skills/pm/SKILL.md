@@ -1,3 +1,8 @@
+---
+name: pm
+description: Proofread and polish messages for professional communication. Use when invoking "/pm" followed by text. Fixes grammar, spelling, and rephrases for clarity. Outputs clean, concise text in a code block for easy copy-paste. Ideal for non-native English speakers in technical/professional contexts.
+---
+
 # PM - Proofread Message
 
 Quick polish for professional messages. Fix grammar, spelling, and improve clarity.
